@@ -1,50 +1,21 @@
-const http = require("http");
-const url = require("url");
+const express = require("express");
+const app = express();
 
-const employeesData = [{ id: 1, name: "test1" }];
+// app.get("/api/employees", (req, res) => res.send("GET method employess"));
+// app.post("/api/employees", (req, res) => res.send("POST method employess"));
+// app.patch("/api/employees", (req, res) => res.send("UPDATE method employess"));
+// app.delete("/api/employees", (req, res) => res.send("DELETE method employess"));
 
-function employeeList(req, res) {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(employeesData));
-  return;
-}
-function addToEmployeeList(req, res) {
-  let body = "";
-  req.on("data", (chunk) => {
-    body += chunk.toString();
-  });
-  req.on("end", () => {
-    employeesData.push(JSON.parse(body));
-    res.end(`${JSON.parse(body).name} added to employee list`);
-  });
-  req.on("error", (error) => {
-    res.statusCode = 400;
-    res.end(error);
-  });
-}
+// app.all("/api/employees", (req, res) =>
+//   res.send(`${req.method} employees api`)
+// );
 
-function defaultMessage(req, res) {
-  res.end("not found");
-  return;
-}
+app
+  .route("/api/employees")
+  .get((req, res) => res.send("GET method employess"))
+  .post((req, res) => res.send("POST method employess"))
+  .patch((req, res) => res.send("PATCH method employess"))
+  .delete((req, res) => res.send("DELETE method employess"))
+  .all((req, res) => res.send("Method not supported"));
 
-const server = http.createServer((req, res) => {
-  const { pathname } = url.parse(req.url);
-  if (pathname === "/api/employees") {
-    switch (req.method) {
-      case "GET":
-        employeeList(req, res);
-        break;
-      case "POST":
-        addToEmployeeList(req, res);
-        break;
-      default:
-        defaultMessage(req, res);
-        break;
-    }
-  } else {
-    defaultMessage(req, res);
-  }
-});
-
-server.listen(3000, () => console.info(`server is listening at PORT 3000`));
+app.listen(3000, () => console.log(`server is listening at PORT 3000`));
