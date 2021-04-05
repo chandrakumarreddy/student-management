@@ -1,21 +1,14 @@
 const express = require("express");
 const app = express();
+const router = express.Router();
+const router1 = express.Router();
 
-// app.get("/api/employees", (req, res) => res.send("GET method employess"));
-// app.post("/api/employees", (req, res) => res.send("POST method employess"));
-// app.patch("/api/employees", (req, res) => res.send("UPDATE method employess"));
-// app.delete("/api/employees", (req, res) => res.send("DELETE method employess"));
+const data = [{ id: 1, name: "test1" }];
 
-// app.all("/api/employees", (req, res) =>
-//   res.send(`${req.method} employees api`)
-// );
+router.get("/employees", (req, res) => res.send("Hello world"));
+router1.get("/employees", (req, res) => res.send(data));
 
-app
-  .route("/api/employees")
-  .get((req, res) => res.send("GET method employess"))
-  .post((req, res) => res.send("POST method employess"))
-  .patch((req, res) => res.send("PATCH method employess"))
-  .delete((req, res) => res.send("DELETE method employess"))
-  .all((req, res) => res.send("Method not supported"));
+app.use("/api", router);
+app.use("/api/v2", router1);
 
 app.listen(3000, () => console.log(`server is listening at PORT 3000`));
