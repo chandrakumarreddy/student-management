@@ -14,6 +14,11 @@ router1.get("/employees", (req, res) => {
   console.log(query);
   return res.send(data);
 });
+router.get("/employees/:id", (req, res) => {
+  const id = +req.params.id;
+  const employee = data.find((_data) => _data.id === id);
+  return res.send(employee || {});
+});
 
 app.use("/api", router);
 app.use("/api/v2", router1);
